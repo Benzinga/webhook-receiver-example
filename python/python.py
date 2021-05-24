@@ -1,21 +1,12 @@
 from flask import abort, Flask, request, Response
-from urllib import unquote_plus
 import json
 import re
-
+# will use flask to setup server for our example
 
 app = Flask(__name__)
 
+# insert URL you have provided to Benzinga
 url = '/placeholder/webhook/v1'
-
-# puts the payload into an empty map
-def parse_request(req):
-    payload = req.get_data()
-    payload = unquote_plus(payload)
-    payload = re.sub('payload=', '', payload)
-    payload = json.loads(payload)
-
-    return payload
 
 @app.route(url, methods=['POST'])
 def respond():
@@ -24,9 +15,10 @@ def respond():
     if request.json is None:
         # handle error here
         print("error"+req_id)
-        abort(400, id + ": Does not contain a body")
-
-    parse_request(request)
+        abort(400, req_id + ": Does not contain a body")
+    # Show me the data!
+    print(request.json)
+    #
     return Response(status=200)
 
 
