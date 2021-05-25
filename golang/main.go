@@ -57,7 +57,7 @@ func WebHookHandler(w http.ResponseWriter, r *http.Request) {
 		io.WriteString(w, "{}")
 		return
 	}
-
+    // Header ID, send this to benzinga if issues arise
 	log.Printf("Received %s", hc.Id)
 	var res Body
 	err = json.Unmarshal(hc.Payload, &res)
@@ -66,7 +66,7 @@ func WebHookHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	// parse `hc.Payload` or do additional processing here
 
-	//send 200 to Benzinga to let them know everything is okay!
+	// send 200 to Benzinga to let them know everything is okay!
 	w.WriteHeader(http.StatusOK)
 	io.WriteString(w, "{}")
 	return
@@ -81,7 +81,7 @@ type Security struct {
 }
 
 type Content struct {
-	ID         int64  `json:"id"`
+	ID         string  `json:"id"`
 	RevisionID int    `json:"revision_id"`
 	Type       string `json:"type"`
 
