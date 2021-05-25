@@ -81,7 +81,7 @@ type Security struct {
 }
 
 type Content struct {
-	ID         string  `json:"id"`
+	ID         int64  `json:"id"`
 	RevisionID int    `json:"revision_id"`
 	Type       string `json:"type"`
 
