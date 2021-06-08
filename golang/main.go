@@ -11,6 +11,7 @@ import (
 )
 
 func main() {
+	log.Printf("server start")
 	// insert URL you have provided to Benzinga
 	http.HandleFunc("/",  WebHookHandler)
 	//optional: set port to other number
@@ -18,7 +19,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("server start")
 }
 
 // Data being sent from Benzinga's webhook as a request: will always be json format
@@ -54,6 +54,7 @@ func WebHookHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		log.Printf("Failed processing hook! ('%s')", err)
+		//insert error you want benzinga to see! body must be less than 5 KiB
 		io.WriteString(w, "{}")
 		return
 	}
@@ -63,12 +64,12 @@ func WebHookHandler(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(hc.Payload, &res)
 	if err != nil {
 		log.Printf("JSON unmarshal error:", err)
+		return
 	}
 	// parse `hc.Payload` or do additional processing here
 
 	// send 200 to Benzinga to let them know everything is okay!
 	w.WriteHeader(http.StatusOK)
-	io.WriteString(w, "{}")
 	return
 }
 
