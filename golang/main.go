@@ -13,7 +13,7 @@ import (
 func main() {
 	log.Printf("server start")
 	// insert URL you have provided to Benzinga
-	http.HandleFunc("/",  WebHookHandler)
+	http.HandleFunc("/", WebHookHandler)
 	//optional: set port to other number
 	err := http.ListenAndServe(":5001", nil)
 	if err != nil {
@@ -23,30 +23,31 @@ func main() {
 
 // Data being sent from Benzinga's webhook as a request: will always be json format
 type HookContext struct {
-	Id        string
-	Payload   []byte
+	Id      string
+	Payload []byte
 }
+
 // Parse request Benzinga sent
-func ParseHook( req *http.Request) (*HookContext, error) {
+func ParseHook(req *http.Request) (*HookContext, error) {
 	hc := HookContext{}
 
-// Double check if delivery header is set
+	// Double check if delivery header is set
 	if hc.Id = req.Header.Get("X-BZ-Delivery"); len(hc.Id) == 0 {
 		return nil, errors.New("No event Id!")
 	}
-// read body into reader
+	// read body into reader
 	body, err := ioutil.ReadAll(req.Body)
 	if err != nil {
 		return nil, err
 	}
-// establish payload
+	// establish payload
 	hc.Payload = body
 
 	return &hc, nil
 }
 
 func WebHookHandler(w http.ResponseWriter, r *http.Request) {
-// parse request
+	// parse request
 	hc, err := ParseHook(r)
 
 	w.Header().Set("Content-type", "application/json")
@@ -58,7 +59,7 @@ func WebHookHandler(w http.ResponseWriter, r *http.Request) {
 		io.WriteString(w, "{}")
 		return
 	}
-    // Header ID, send this to benzinga if issues arise
+	// Header ID, send this to benzinga if issues arise
 	log.Printf("Received %s", hc.Id)
 	var res Body
 	err = json.Unmarshal(hc.Payload, &res)
